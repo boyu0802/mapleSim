@@ -11,8 +11,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.SimDrivetrainConstant;
+import frc.robot.Subsystem.AlgaeIntake.IntakeIOSIM;
+import frc.robot.Subsystem.AlgaeIntake.IntakeSubsystem;
 import frc.robot.Subsystem.Drive.SwerveIOCTRE;
 import frc.robot.Subsystem.Drive.SwerveIOSim;
 import frc.robot.Subsystem.Drive.SwerveSubsystem;
@@ -20,6 +24,7 @@ import frc.robot.Subsystem.Drive.SwerveSubsystem;
 public class RobotContainer {
   private CommandXboxController controller = new CommandXboxController(0);
   private SwerveSubsystem swerveSubsystem;
+  private IntakeSubsystem intakeSubsystem;
   
       private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
             .withDeadband(DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND * 0.1)
@@ -33,7 +38,7 @@ public class RobotContainer {
       swerveSubsystem = new SwerveSubsystem(new SwerveIOCTRE(DrivetrainConstants.SWERVE_DRIVETRAIN_CONSTANTS, DrivetrainConstants.MODULE_CONSTANTS));
     } else {
       swerveSubsystem = new SwerveSubsystem(new SwerveIOSim(SimDrivetrainConstant.DrivetrainConstants, SimDrivetrainConstant.MODULE_CONSTANTS));
-      
+      intakeSubsystem = new IntakeSubsystem(new IntakeIOSIM(Constants.AlgaeIntakeConstants.PIVOT_MOTOR_CONFIG, Constants.AlgaeIntakeConstants.ROLLER_MOTOR_CONFIG));
     }
     configureBindings();
   }
@@ -45,6 +50,17 @@ public class RobotContainer {
                   .withVelocityY(-controller.getLeftX()*DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND)
                   .withRotationalRate(-controller.getRightX()*DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND))
     );
+
+
+    // controller.a().onTrue(intakeSubsystem.toIntakePosition());
+
+    controller.a().whileTrue(intakeSubsystem.sysIdDynamic(Direction.kForward));
+    controller.b().whileTrue(intakeSubsystem.sysIdDynamic(Direction.kReverse));
+    // controller.x().whileTrue(intakeSubsystem.sysIdQuasistatic(Direction.kForward));
+    controller.y().whileTrue(intakeSubsystem.sysIdQuasistatic(Direction.kReverse));
+
+    controller.x().onTrue(intakeSubsystem.stop());
+
   } 
 
   public Command getAutonomousCommand() {

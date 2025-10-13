@@ -20,7 +20,8 @@ public interface SwerveIO extends IoRefresher {
 
     @AutoLog
     class SwerveIOInputs {    
-        public Pose2d robotPose = new Pose2d();
+        public Pose2d absoluteRobotPose = new Pose2d();
+        public Pose2d estimatedRobotPose = new Pose2d();
         public SwerveModuleState[] moduleStates;
         public ChassisSpeeds fieldRelativeChassisSpeeds;
         public SwerveModuleState[] targetStates;

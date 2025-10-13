@@ -71,7 +71,8 @@ public class SwerveIOSim extends SwerveIOCTRE{
         inputs.moduleStates = getState().ModuleStates;
         inputs.modulePositions = this.getStateCopy().ModulePositions;
         inputs.timeStamp = this.getStateCopy().Timestamp;
-        inputs.robotPose = mapleSim.mapleSimDrive.getSimulatedDriveTrainPose();
+        inputs.absoluteRobotPose = mapleSim.mapleSimDrive.getSimulatedDriveTrainPose();
+        inputs.estimatedRobotPose = this.getStateCopy().Pose;
         inputs.targetStates = this.getStateCopy().ModuleTargets;
         inputs.fieldRelativeChassisSpeeds = mapleSim.mapleSimDrive.getDriveTrainSimulatedChassisSpeedsFieldRelative();
     }

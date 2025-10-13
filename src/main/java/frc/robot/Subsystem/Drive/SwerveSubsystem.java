@@ -43,33 +43,6 @@ public class SwerveSubsystem extends SubsystemBase{
     private SwerveIO io = new SwerveIO(){};
     private Object lock = new Object();
 
-    // private final SysIdRoutine translationSysidRoutine = new SysIdRoutine(
-    //     new SysIdRoutine.Config(
-    //         Units.Volts.of(1).per(Seconds),
-    //         Units.Volts.of(7),
-    //         Units.Seconds.of(5),
-    //         state -> Logger.recordOutput("SysId_Translation_State",state.toString())),
-    //     new SysIdRoutine.Mechanism(
-    //         output -> io.runDriveCharacterization(output.in(Volts)), null, this));
-
-    // private final SysIdRoutine steerSysidRoutine = new SysIdRoutine(
-    //     new SysIdRoutine.Config(
-    //         Units.Volts.of(1).per(Seconds),
-    //         Units.Volts.of(7),
-    //         Units.Seconds.of(5),
-    //         state -> Logger.recordOutput("SysId_Steer_State",state.toString())),
-    //     new SysIdRoutine.Mechanism(
-    //         output -> io.runSteerCharacterization(output.in(Volts)), null, this));
-
-
-    // private final SysIdRoutine rotationSysidRoutine = new SysIdRoutine(
-    //     new SysIdRoutine.Config(
-    //         Units.Volts.of(Math.PI/6).per(Seconds),
-    //         Units.Volts.of(Math.PI),
-    //         Units.Seconds.of(5),
-    //         state -> Logger.recordOutput("SysId_Rotation_State",state.toString())),
-    //     new SysIdRoutine.Mechanism(
-    //         output -> io.runRotationCharacterization(output.in(Volts)), null, this));
 
     public SwerveSubsystem(SwerveIO io){
         this.io = io;
@@ -90,7 +63,7 @@ public class SwerveSubsystem extends SubsystemBase{
     public void periodic(){
         io.updateSwerveInputs(inputs);
         synchronized(lock){
-            Logger.processInputs("Subsytem/SwerveDrivetrain", inputs);
+            Logger.processInputs("Subsystem/SwerveDrivetrain", inputs);
             Logger.processInputs("Subsystem/Swerve/Modules/FL", FLinputs);
             Logger.processInputs("Subsystem/Swerve/Modules/BL", BLinputs);
             Logger.processInputs("Subsystem/Swerve/Modules/BR", BRinputs);

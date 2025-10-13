@@ -18,6 +18,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.fasterxml.jackson.databind.JsonSerializable.Base;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -67,7 +68,7 @@ public class SwerveIOCTRE extends SwerveDrivetrain<TalonFX,TalonFX,CANcoder> imp
         inputs.moduleStates = this.getStateCopy().ModuleStates;
         inputs.modulePositions = this.getStateCopy().ModulePositions;
         inputs.timeStamp = this.getStateCopy().Timestamp;
-        inputs.robotPose = this.getStateCopy().Pose;
+        inputs.estimatedRobotPose = this.getStateCopy().Pose;
         inputs.targetStates = this.getStateCopy().ModuleTargets;
         inputs.fieldRelativeChassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(this.getStateCopy().Speeds, this.getStateCopy().Pose.getRotation());
     }
@@ -103,27 +104,11 @@ public class SwerveIOCTRE extends SwerveDrivetrain<TalonFX,TalonFX,CANcoder> imp
         } 
     }
 
-    public void periodic(){
-        // SmartDashboard.putNumber("module 2 drive motor position", getModule(1).getDriveMotor().getPosition(true).getValueAsDouble());
-        // SmartDashboard.putNumber("module 2 drive rotor position", getModule(1).getDriveMotor().getRotorPosition(true).getValueAsDouble());
-        // SmartDashboard.putNumber("module 2 drive motor voltage", getModule(1).getDriveMotor().getSimState().getMotorVoltage());
-        
-        
-        
-        
-        // SmartDashboard.putNumber("module 2 steer motor ", getModule(1).getSteerMotor().getPosition().getValueAsDouble()); 
-        // SmartDashboard.putNumber("module 2 steer motor position", getModule(1).getSteerMotor().getPosition().getValue().magnitude());
-        // SmartDashboard.putNumber("module 2 cancoder position", getModule(1).getEncoder().getPosition().getValue().magnitude());
-        // SmartDashboard.putNumber("module 2 drive motor id", getModule(1).getDriveMotor().getDeviceID());
-        // SmartDashboard.putNumber("module 2 steer motor id", getModule(1).getSteerMotor().getDeviceID());
-        // SmartDashboard.putNumber("module 2 cancoder id", getModule(1).getEncoder().getDeviceID());
-        
 
-        // SmartDashboard.putNumber("module 2 drive motor position from map", swerveModuleSignals.get(1).get("drivePosition").getValueAsDouble());
-        // SmartDashboard.putNumber("module 2 steer motor position from map", swerveModuleSignals.get(1).get("anglePosition").getValueAsDouble());
-        // SmartDashboard.putNumber("module 2 cancoder position from map", swerveModuleSignals.get(1).get("angleAbsolutePosition").getValueAsDouble());
-    
+    public void addVisionMeasurement(Pose2d visionRobotPose, double timeStamp){
+        super.addVisionMeasurement(visionRobotPose, timeStamp);
     }
+
 
     @AutoLogOutput
     public ChassisSpeeds getChassisSpeeds(){
