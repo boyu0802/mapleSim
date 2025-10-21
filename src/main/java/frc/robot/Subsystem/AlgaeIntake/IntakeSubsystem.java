@@ -38,11 +38,11 @@ public class IntakeSubsystem extends SubsystemBase{
 
 
     public Command toDefaultPosition(){
-        return Commands.run(()-> io.runPivotPosition(0.02));
+        return Commands.run(()-> io.runPivotPosition(0.012),this);
     }
 
     public Command toIntakePosition(){
-        return Commands.run(()-> io.runPivotPosition(0.2));
+        return Commands.run(()-> io.runPivotPosition(0.488),this);
 
     }
 

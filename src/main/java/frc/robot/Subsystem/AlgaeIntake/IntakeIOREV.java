@@ -65,8 +65,8 @@ public class IntakeIOREV implements IntakeIO{
 
 
     public void periodic(){
-        Logger.recordOutput("intake/pivot/setpoint", setpoint);
-        Logger.recordOutput("intake/pivot/absolute encode value", pivotFlex.getAbsoluteEncoder().getPosition());   
+        Logger.recordOutput("intake/pivot/Motor Setpoint Rotation", setpoint);
+        Logger.recordOutput("intake/pivot/Motor Absolute Encoder value Rotation", pivotFlex.getAbsoluteEncoder().getPosition());   
     }
 
 }

@@ -31,30 +31,31 @@ public class IntakeIOSIM extends IntakeIOREV {
     public static final double kArmMass = 8.0; // Kilograms
     public static final double kArmLength = Units.inchesToMeters(30);
 
-    private SingleJointedArmSim pivotArmSim = new SingleJointedArmSim(
+    private final SingleJointedArmSim pivotArmSim =
+    new SingleJointedArmSim(
         pivotGearbox,
         Constants.AlgaeIntakeConstants.PIVOT_MOTOR_GEAR_RATIO,
-        SingleJointedArmSim.estimateMOI(kArmLength, kArmMass),
-        kArmLength,
-        Units.degreesToRadians(-140),
-        Units.degreesToRadians(100),
+        SingleJointedArmSim.estimateMOI(0.5, 8),
+        0.5,
+        Units.degreesToRadians(-82) , // 90 degrees in radians
+        Units.degreesToRadians(36), 
         false,
-        Units.degreesToRadians(-70)
-    );
+        Units.degreesToRadians(-80));
 
     @AutoLogOutput
     private Pose3d pivotArmPose = new Pose3d(-0.299, 0.3, 0.248, new Rotation3d(0,0,0));
-// Units.inchesToMeters(24.6)
-    private LoggedMechanism2d pivotArmMech = new LoggedMechanism2d(2, 2);
-    private LoggedMechanismRoot2d pivotRoot = pivotArmMech.getRoot("pivotRoot",0.6,0.3);
-    private LoggedMechanismLigament2d pivotTower =
-        pivotRoot.append(new LoggedMechanismLigament2d("pivotTower", 0.110, -90, 2, new Color8Bit(Color.kBlue)));
-    private LoggedMechanismLigament2d pivotArm =
-        pivotRoot.append(new LoggedMechanismLigament2d("pivotArm",0.16, 0,2, new Color8Bit(Color.kBlue)));
-    private LoggedMechanismLigament2d pivotArmA = 
-        pivotArm.append(new LoggedMechanismLigament2d("pivotArmA", 0.142, 34 ,2, new Color8Bit(Color.kBlue)));
-    private LoggedMechanismLigament2d pivotArmB =
-        pivotArmA.append(new LoggedMechanismLigament2d("pivotArmB", 0.25, 40,2, new Color8Bit(Color.kBlue)));
+
+
+    // private LoggedMechanism2d pivotArmMech = new LoggedMechanism2d(2, 2);
+    // private LoggedMechanismRoot2d pivotRoot = pivotArmMech.getRoot("pivotRoot",0.6,0.3);
+    // private LoggedMechanismLigament2d pivotTower =
+    //     pivotRoot.append(new LoggedMechanismLigament2d("pivotTower", 0.110, -90, 2, new Color8Bit(Color.kBlue)));
+    // private LoggedMechanismLigament2d pivotArm =
+    //     pivotRoot.append(new LoggedMechanismLigament2d("pivotArm",0.16, 0,2, new Color8Bit(Color.kBlue)));
+    // private LoggedMechanismLigament2d pivotArmA = 
+    //     pivotArm.append(new LoggedMechanismLigament2d("pivotArmA", 0.142, 34 ,2, new Color8Bit(Color.kBlue)));
+    // private LoggedMechanismLigament2d pivotArmB =
+    //     pivotArmA.append(new LoggedMechanismLigament2d("pivotArmB", 0.25, 40,2, new Color8Bit(Color.kBlue)));
 
     public IntakeIOSIM(SparkFlexConfig pivotConfig, SparkFlexConfig rollerConfig){
         super(pivotConfig, rollerConfig);
@@ -64,10 +65,10 @@ public class IntakeIOSIM extends IntakeIOREV {
         rollerSim = new SparkFlexSim(getRollerFlex(), rollerGearbox);
 
 
-        pivotTower.setColor(new Color8Bit(Color.kAquamarine));
-        pivotArm.setColor(new Color8Bit(Color.kLime));
-        pivotArmA.setColor(new Color8Bit(Color.kNavajoWhite));
-        pivotArmB.setColor(new Color8Bit(Color.kMediumVioletRed));
+        // pivotTower.setColor(new Color8Bit(Color.kAquamarine));
+        // pivotArm.setColor(new Color8Bit(Color.kLime));
+        // pivotArmA.setColor(new Color8Bit(Color.kNavajoWhite));
+        // pivotArmB.setColor(new Color8Bit(Color.kMediumVioletRed));
 
         pivotSim.setPosition(0);
     }
@@ -85,13 +86,12 @@ public class IntakeIOSIM extends IntakeIOREV {
 
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(pivotArmSim.getCurrentDrawAmps()));
 
-        pivotArm.setAngle(Units.radiansToDegrees(pivotArmSim.getAngleRads()));
+        // pivotArm.setAngle(Units.radiansToDegrees(pivotArmSim.getAngleRads()));
         pivotArmPose = new Pose3d(-0.299, 0.3, 0.248, new Rotation3d(0,-pivotArmSim.getAngleRads(),0));
         
-        Logger.recordOutput("arm_sim", pivotArmMech);
-        Logger.recordOutput("intake/pivot/angle", Units.radiansToRotations(pivotArmSim.getAngleRads()));
-        Logger.recordOutput("intake/pivot/velocity", pivotArmSim.getVelocityRadPerSec());
-        Logger.recordOutput("intake/pivot/voltage", pivotArmSim.getInput().get(0, 0));
+        // Logger.recordOutput("arm_sim", pivotArmMech);
+        Logger.recordOutput("intake/pivot/Sim Angle Rotation", Units.radiansToRotations(pivotArmSim.getAngleRads()));
+        Logger.recordOutput("intake/pivot/Sim Velocity RadsPerSec", pivotArmSim.getVelocityRadPerSec());
         super.periodic();
     }
 
